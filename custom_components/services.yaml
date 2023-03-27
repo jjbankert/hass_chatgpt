@@ -1,14 +1,14 @@
 chat:
   name: Chat with ChatGPT
-  description: Get a chat response that follows the context you send to ChatGPT
+  description: Get a chat response that follows the context you send to ChatGPT. The response will be sent as an 'return_value' event. If the 'callback_id' is set in the request, then the response 'event.data.callback_id' will contain the same value.
   fields:
-    prompts:
-      description: A list of
+    messages:
+      description: The messages (chat history) for ChatGPT, see https://platform.openai.com/docs/guides/chat
       example: |
         - role: user
           content: "Write a happy reminder for the 'cleaning' calendar event."
       required: true
-    context_id:
-      description: Lipsum
-      example: abc123
-      required: true
+    callback_id:
+      description: A unique identifier that makes it easy to pick the response to the service call from the 'return_value' events. In automations '{{this.context.id}}' works well.
+      example: recognizable_id
+      required: false
