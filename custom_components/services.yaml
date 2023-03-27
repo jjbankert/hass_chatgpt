@@ -1,0 +1,14 @@
+chat:
+  name: Chat with ChatGPT
+  description: Get a chat response that follows the context you send to ChatGPT
+  fields:
+    prompts:
+      description: A list of
+      example: |
+        - role: user
+          content: "Write a happy reminder for the 'cleaning' calendar event."
+      required: true
+    context_id:
+      description: Lipsum
+      example: abc123
+      required: true

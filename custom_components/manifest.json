@@ -1,0 +1,16 @@
+{
+    "domain": "chatgpt",
+    "name": "ChatGPT",
+    "version": "0.1.0",
+    "codeowners": [
+        "@jjbankert"
+    ],
+    "dependencies": [],
+    "documentation": "https://github.com/jjbankert/hass_chatgpt",
+    "issue_tracker": "https://github.com/jjbankert/hass_chatgpt/issues",
+    "integration_type": "service",
+    "iot_class": "cloud_polling",
+    "requirements": [
+        "requests==2.28.2"
+    ]
+}
