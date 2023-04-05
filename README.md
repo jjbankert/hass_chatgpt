@@ -2,6 +2,8 @@
 
 This is a custom integration for Home Assistant that allows you to interact with OpenAI's ChatGPT API. The source code can be found on [GitHub](https://github.com/jjbankert/hass_chatgpt).
 
+Note that this is not an official integration, and so not developed by either OpenAI or Home Assistant/Nabu Casa.
+
 - [ChatGPT Integration for Home Assistant](#chatgpt-integration-for-home-assistant)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
