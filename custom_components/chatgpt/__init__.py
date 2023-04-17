@@ -33,7 +33,7 @@ def setup(hass: HomeAssistant, config: Config):
             response_msg["callback_id"] = callback_id
 
         # return the result
-        hass.bus.fire("return_value", response_msg)
+        hass.bus.fire("chatgpt_response", response_msg)
 
     hass.services.register(DOMAIN, "chat", chat)
 
