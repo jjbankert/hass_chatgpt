@@ -13,8 +13,6 @@ Note that this is not an official integration, and so not developed by either Op
   - [Usage](#usage)
     - [Service](#service)
     - [Example 1: Two Automations](#example-1-two-automations)
-      - [Automation 1: Call the Service](#automation-1-call-the-service)
-      - [Automation 2: Handle the Response](#automation-2-handle-the-response)
     - [Example 2: Single Automation](#example-2-single-automation)
 
 ## Prerequisites
@@ -86,7 +84,7 @@ This example demonstrates how to use the `chatgpt.chat` service with two separat
 **Cons:**
 * It's harder to customize the 'Handle ChatGPT Response' automation based on the original event that triggered the 'Request GPT Response' Automation. For example you might want to used different groups of TTS devices for different use-cases.
 
-#### Automation 1: Call the Service
+**Automation 1:** Call the Service
 
 ```yaml
 alias: Request ChatGPT Response
@@ -102,7 +100,7 @@ action:
       callback_event: chatgpt_tts
 ```
 
-#### Automation 2: Handle the Response
+**Automation 2:** Handle the Response
 In this example the response is handled by using the [Android app's](https://companion.home-assistant.io/docs/notifications/notifications-basic/#text-to-speech-notifications) text-to-speech functionality.
 
 ```yaml
