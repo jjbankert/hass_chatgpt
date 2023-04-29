@@ -8,7 +8,12 @@ chat:
         - role: user
           content: "Write a happy reminder for the 'cleaning' calendar event."
       required: true
+    callback_event:
+      description: The event type for the response event containing chat data. Default is 'return_value', can be set to 'chatgpt_tts' or others as needed.
+      example: chatgpt_tts
+      default: return_value
+      required: false
     callback_id:
-      description: A unique identifier that makes it easy to pick the response to the service call from the 'return_value' events. In automations '{{this.context.id}}' works well.
+      description: An optional, unique identifier that makes it easy to pick the response to the service call from the response events (default 'return_value' event type). In automations '{{this.context.id}}' works well.
       example: recognizable_id
       required: false

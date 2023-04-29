@@ -12,7 +12,10 @@ Note that this is not an official integration, and so not developed by either Op
     - [Configuration](#configuration)
   - [Usage](#usage)
     - [Service](#service)
-    - [Example Home Assistant Automation](#example-home-assistant-automation)
+    - [Example 1: Two Automations](#example-1-two-automations)
+      - [Automation 1: Call the Service](#automation-1-call-the-service)
+      - [Automation 2: Handle the Response](#automation-2-handle-the-response)
+    - [Example 2: Single Automation](#example-2-single-automation)
 
 ## Prerequisites
 
@@ -65,25 +68,75 @@ Lastly, restart Home Assistant again, or reload all YAMLs in the Developer Tools
 The integration provides a `chatgpt.chat` service that takes the following parameters:
 
 - `messages` (required): The messages (chat history) for ChatGPT. See [OpenAI API documentation](https://platform.openai.com/docs/guides/chat) for more details.
+- `callback_event` (optional): The event type that is used for the response event that contains the chat data. By default, this is `return_value`, but something like `chatgpt_tts` might make sense for the subset of responses that should be picked up by a TTS automation.
 - `callback_id` (optional): A unique identifier that makes it easy to pick the response to the service call from the `return_value` events. In automations, `{{this.context.id}}` works well.
 
-The service call response will be sent as a `return_value` event. The event data will contain the ChatGPT response as [defined here](https://platform.openai.com/docs/api-reference/chat). Currently this is a `content` key with the response message, and the `"role": "assistant"` pair. If `callback_id` is set in the request, the response `event.data.callback_id` will contain the same value.
+The service call response will be sent as a return_value event or the custom event type specified in the callback_event parameter. The event data will contain the ChatGPT response as [defined here](https://platform.openai.com/docs/api-reference/chat). Currently this is a `content` key with the response message, and the `"role": "assistant"` pair. If `callback_id` is set in the request, the response `event.data.callback_id` will contain the same value.
 
-See the example below for a practical example.
+See the examples below for practical examples.
 
-### Example Home Assistant Automation
+### Example 1: Two Automations
 
-Here's an example automation that demonstrates how to use the `chatgpt.chat` service to generate a response and send it to a TTS device.
+This example demonstrates how to use the `chatgpt.chat` service with two separate automations. The first automation calls the service, and the second automation is triggered by the resulting event defined in the `callback_event` parameter.
 
-This example is triggered by an event of your choice. It generates a response from ChatGPT based on the input message and sends it to an [Android device](https://companion.home-assistant.io/docs/notifications/notifications-basic/#text-to-speech-notifications) for text-to-speech. The automation consists of two parallel sequences:
+**Pros:**
+* This is relatively simple to set up, compared to putting all the logic in a single automation.
+* Also it can be nice to unify all the TTS logic in a single automation.
 
-The example uses the `parallel` option to execute two sequences simultaneously, ensuring that the listener is set up before the response is generated. It also demonstrates how to use the `callback_id` to match the response event with the correct service call.
+**Cons:**
+* It's harder to customize the 'Handle ChatGPT Response' automation based on the original event that triggered the 'Request GPT Response' Automation. For example you might want to used different groups of TTS devices for different use-cases.
+
+#### Automation 1: Call the Service
+
+```yaml
+alias: Request ChatGPT Response
+trigger:
+  - platform: event
+    event_type: your_trigger_event_type
+action:
+  - service: chatgpt.chat
+    data:
+      messages:
+        - role: user
+          content: 'Write a happy, one line, spoken language reminder for the cleaning calendar event.'
+      callback_event: chatgpt_tts
+```
+
+#### Automation 2: Handle the Response
+In this example the response is handled by using the [Android app's](https://companion.home-assistant.io/docs/notifications/notifications-basic/#text-to-speech-notifications) text-to-speech functionality.
+
+```yaml
+alias: Handle ChatGPT Response
+trigger:
+  - platform: event
+    event_type: chatgpt_tts
+action:
+  - service: notify.mobile_app_<your_device_id_here>
+    data:
+      message: TTS
+      data:
+        tts_text: "{{trigger.event.data.content | trim | replace('\"','')}}"
+```
+
+### Example 2: Single Automation
+
+This example demonstrates how to use the `chatgpt.chat` service to generate a response and send it to a TTS device within a single automation. It is triggered by an event of your choice and sends the generated response to an [Android device]() for text-to-speech.
+
+The example automation uses the `parallel` option to execute two sequences simultaneously, ensuring that the listener is set up before the response is generated. The `callback_id` is used to match the response event with the correct service call.
 
 - **call chatgpt**: The first sequence introduces a 100ms delay before calling the `chatgpt.chat` service. This delay is included to ensure that the listener in the second sequence is set up and ready to receive the response from ChatGPT. The callback_id is set to `{{this.context.id}}` to uniquely identify the response event.
 - **call tts**: The second sequence waits for a `return_value` event with a matching `callback_id`. When the event is received, it extracts the content of the response message and sends it to the TTS device. Note that I added some post-processing of the result with `trim` and `replace`, because the ChatGPT output can be a bit inconsistent.
 
+
+**Pros:**
+* It's easy to customize exactly how the response is handled, based on the event that triggers 'Say With ChatGPT'
+* Text-to-speech logic can be unified in a more flexible script that you can pass targets to.
+
+**Cons:**
+* The logic is kind of hard to understand and inelegant. Home Assistant doesn't have specific logic to grab a service's output in the same automation that called the service, and so we make do with what we got.
+
 ```yaml
-alias: Say With GPT
+alias: Say With ChatGPT
 trigger:
   - platform: event
     event_type: your_trigger_event_type

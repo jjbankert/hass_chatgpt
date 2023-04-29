@@ -11,6 +11,7 @@ def setup(hass: HomeAssistant, config: Config):
         # load the call parameters
         messages = call.data["messages"]
         callback_id = call.data.get("callback_id", None)
+        callback_event = call.data.get("callback_event", "return_value")
 
         # load the config
         static_conf = config[DOMAIN]
@@ -33,7 +34,7 @@ def setup(hass: HomeAssistant, config: Config):
             response_msg["callback_id"] = callback_id
 
         # return the result
-        hass.bus.fire("return_value", response_msg)
+        hass.bus.fire(callback_event, response_msg)
 
     hass.services.register(DOMAIN, "chat", chat)
 
