@@ -4,8 +4,9 @@ import logging
 
 from homeassistant.core import Config, HomeAssistant, ServiceCall, Context
 
-DOMAIN = "chatgpt"
+_LOGGER = logging.getLogger(__name__)
 
+DOMAIN = "chatgpt"
 
 def setup(hass: HomeAssistant, config: Config):
     def chat(call: ServiceCall):
@@ -30,7 +31,7 @@ def setup(hass: HomeAssistant, config: Config):
         )
 
         # prepare the result
-        logging.debug('chatgpt - API response: %s', response.json() )
+        _LOGGER.debug('chatgpt - API response: %s', response.json() )
         response_msg = response.json()["choices"][0]["message"]
         if callback_id is not None:
             response_msg["callback_id"] = callback_id
