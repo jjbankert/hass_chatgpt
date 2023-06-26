@@ -20,22 +20,25 @@ def setup(hass: HomeAssistant, config: Config):
         model = static_conf.get("model", "gpt-3.5-turbo")
         temperature = static_conf.get("temperature", 1.0)
 
-        # make the request
-        # timeout 3.2s to connect (1 retry), 60s to generate the answer
-        response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
-            json={"model": model, "messages": messages, "temperature": temperature},
-            timeout=(3.2, 60),
-        )
+        try:
+            # make the request
+            # timeout 3.2s to connect (1 retry), 60s to generate the answer
+            response = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={"model": model, "messages": messages, "temperature": temperature},
+                timeout=(3.2, 60),
+            )
 
-        if "error" in response:
-            _LOGGER.error('chatgpt - ERROR in API response: %s', response.json() )
-        elif "warn" in response:
-            _LOGGER.warning('chatgpt - WARN in API response: %s', response.json() )
-        else: 
-            _LOGGER.debug('chatgpt - No issue in API repsonse encountered. API response: %s', response.json() )
-
+            if "error" in response:
+                _LOGGER.error('chatgpt - ERROR in API response: %s', response.json() )
+            elif "warn" in response:
+                _LOGGER.warning('chatgpt - WARN in API response: %s', response.json() )
+            else: 
+                _LOGGER.debug('chatgpt - No issue in API repsonse encountered. API response: %s', response.json() )
+        except ApiError as err:
+            raise UpdateFailed(f"Error communicating with API: {err}")
+    
         # prepare the result
         response_msg = response.json()["choices"][0]["message"]
         if callback_id is not None:
