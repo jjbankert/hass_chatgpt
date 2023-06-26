@@ -30,7 +30,7 @@ def setup(hass: HomeAssistant, config: Config):
         )
 
         # prepare the result
-        logging.info('chatGPT responsex: %s', response.json() )
+        logging.debug('chatgpt - API response: %s', response.json() )
         response_msg = response.json()["choices"][0]["message"]
         if callback_id is not None:
             response_msg["callback_id"] = callback_id
