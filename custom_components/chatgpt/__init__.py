@@ -32,7 +32,7 @@ def setup(hass: HomeAssistant, config: Config):
         if "error" in response:
             _LOGGER.error('chatgpt - ERROR in API response: %s', response.json() )
         elif "warn" in response:
-            _LOGGER.warn('chatgpt - WARN in API response: %s', response.json() )
+            _LOGGER.warning('chatgpt - WARN in API response: %s', response.json() )
         else: 
             _LOGGER.debug('chatgpt - No issue in API repsonse encountered. API response: %s', response.json() )
 
