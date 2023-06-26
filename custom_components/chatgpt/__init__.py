@@ -3,8 +3,9 @@ import requests
 
 from homeassistant.core import Config, HomeAssistant, ServiceCall, Context
 
-DOMAIN = "chatgpt"
+_LOGGER = logging.getLogger(__name__)
 
+DOMAIN = "chatgpt"
 
 def setup(hass: HomeAssistant, config: Config):
     def chat(call: ServiceCall):
@@ -27,6 +28,13 @@ def setup(hass: HomeAssistant, config: Config):
             json={"model": model, "messages": messages, "temperature": temperature},
             timeout=(3.2, 60),
         )
+
+        if "error" in response:
+            _LOGGER.error('chatgpt - ERROR in API response: %s', response.json() )
+        elif "warn" in response:
+            _LOGGER.warn('chatgpt - WARN in API response: %s', response.json() )
+        else: 
+            _LOGGER.debug('chatgpt - No issue in API repsonse encountered. API response: %s', response.json() )
 
         # prepare the result
         response_msg = response.json()["choices"][0]["message"]
