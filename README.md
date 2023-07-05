@@ -1,6 +1,8 @@
 # Notice: Project Discontinued
 This project will no longer be maintained. The [responding services](https://www.home-assistant.io/blog/2023/07/05/release-20237/#services-can-now-respond) feature in Home Assistant's 2023.7 release enables me to use the [OpenAI Conversation integration](https://www.home-assistant.io/integrations/openai_conversation/) for all my personal use cases. 
 
+Thanks to everyone who responded with issues, pull requests and on the Home Assistant community thread.
+
 See further down for the original documentation.
 
 I'll show here how you can modify [Example 2: Single Automation](#example-2-single-automation) to use the new native feature. It's overall much simpler than before, which is nice. The only tricky thing is figuring out the `agent_id`. Go to developer tools -> services -> `conversation.process`. In the UI mode, select your OpenAI conversation agent from the Agent drop-down, and then switch to YAML mode to see the id.
