@@ -1,5 +1,5 @@
 # Notice: Project Discontinued
-This project will no longer be maintained. The "responding services" feature Home Assistant's **2023.7** release enables me to use the [OpenAI Conversation integration](https://www.home-assistant.io/integrations/openai_conversation/) for all my personal use cases. 
+This project will no longer be maintained. The [responding services](https://www.home-assistant.io/blog/2023/07/05/release-20237/#services-can-now-respond) feature in Home Assistant's 2023.7 release enables me to use the [OpenAI Conversation integration](https://www.home-assistant.io/integrations/openai_conversation/) for all my personal use cases. 
 
 See further down for the original documentation.
 
