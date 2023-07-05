@@ -1,9 +1,34 @@
-# ChatGPT Integration for Home Assistant
+# Notice: Project Discontinued
+This project will no longer be maintained. The "responding services" feature Home Assistant's **2023.7** release enables me to use the [OpenAI Conversation integration](https://www.home-assistant.io/integrations/openai_conversation/) for all my personal use cases. 
 
+See further down for the original documentation.
+
+I'll show here how you can modify [Example 2: Single Automation](#example-2-single-automation) to use the new native feature. It's overall much simpler than before, which is nice. The only tricky thing is figuring out the `agent_id`. Go to developer tools -> services -> `conversation.process`. In the UI mode, select your OpenAI conversation agent from the Agent drop-down, and then switch to YAML mode to see the id.
+
+```yaml
+alias: Say With ChatGPT
+trigger:
+  - platform: event
+    event_type: your_trigger_event_type
+action:
+  - service: conversation.process
+    data:
+      agent_id: <agent_id goes here>
+      text: Write a happy, one line, spoken language reminder for the 'cleaning' calendar event.
+    response_variable: chatgpt
+  - service: notify.mobile_app_<your_device_id_here>
+    data:
+      message: TTS
+      data:
+        tts_text: "{{chatgpt.response.speech.plain.speech | trim | replace('\"','')}}"
+```
+
+# ChatGPT Integration for Home Assistant
 This is a custom integration for Home Assistant that allows you to interact with OpenAI's ChatGPT API. The source code can be found on [GitHub](https://github.com/jjbankert/hass_chatgpt).
 
 Note that this is not an official integration, and so not developed by either OpenAI or Home Assistant/Nabu Casa.
 
+- [Notice: Project Discontinued](#notice-project-discontinued)
 - [ChatGPT Integration for Home Assistant](#chatgpt-integration-for-home-assistant)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
